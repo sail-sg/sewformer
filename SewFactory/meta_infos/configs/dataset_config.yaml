@@ -1,0 +1,40 @@
+tee:
+  path: meta_infos\Patterns\basic tee\tee.json
+  name: tee
+  size: 2
+tee_sleeveless:
+  path: meta_infos\Patterns\basic tee\tee_sleeveless.json
+  name: tee_sleeveless
+  size: 2
+wb_pants_straight:
+  path: meta_infos\Patterns\pants\wb_pants_straight.json
+  name: wb_pants_straight
+  size: 2
+pants_straight_sides:
+  path: meta_infos\Patterns\pants\pants_straight_sides.json
+  name: pants_straight_sides
+  size: 2
+skirt_2_panels:
+  path: meta_infos\Patterns\skirts\skirt_2_panels.json
+  name: skirt_2_panels
+  size: 2
+skirt_4_panels:
+  path: meta_infos\Patterns\skirts\skirt_4_panels.json
+  name: skirt_4_panels
+  size: 2
+skirt_8_panels:
+  path: meta_infos\Patterns\skirts\skirt_8_panels.json
+  name: skirt_8_panels
+  size: 2
+dress_sleeveless:
+  path: meta_infos\Patterns\combos\dress_sleeveless.json
+  name: dress_sleeveless
+  size: 2
+wb_dress_sleeveless:
+  path: meta_infos\Patterns\combos\wb_dress_sleeveless.json
+  name: wb_dress_sleeveless
+  size: 2
+jumpsuit_sleeveless:
+  path: meta_infos\Patterns\combos\jumpsuit_sleeveless.json
+  name: jumpsuit_sleeveless
+  size: 2

@@ -1,0 +1,23 @@
+{
+    "joints_mat_path": "meta_infos\\fbx_metas\\joints_mat_SMPLH.npz",
+    "body_file": "",
+    "texture_file": "examples\\skin_textures",
+    "pose_file": "",
+    "animated": false,
+    "num_frames": 4,
+    "export_log": false,
+    "export_folder": "",
+    "extend_time_stamp": [
+        -150,
+        -200
+    ],
+    "rekey": true,
+    "rekey_stamp": -120,
+    "export_final": true,
+    "sim_fist_anime": "meta_infos\\fbx_metas\\ani_figures.json",
+    "texture_color": [
+        0.838,
+        0.720,
+        0.658
+    ]
+}

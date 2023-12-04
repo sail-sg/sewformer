@@ -1,0 +1,50 @@
+{
+    "body": {
+        "name": "",
+        "shape": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "total_frames": 0,
+        "texture": ""
+    },
+    "render": {
+        "config": {
+            "resolution": [
+                1024,
+                1024
+            ],
+            "materials": "materials.mb",
+            "shape_skip": 40
+        },
+        "stats": {
+            "render_time": {}
+        }
+    },
+    "sim": {
+        "config": {
+            "body_friction": 0.0,
+            "selfCollision": 1,
+            "zero_gravity_steps": 5,
+            "attach_delay_steps": 3,
+            "object_intersect_border_threshold": 500,
+            "self_intersect_hit_threshold": 200,
+            "resolution_scale": 4,
+            "attconf_file": "D:\\liulj_dev\\DatasetGenerator\\meta_infos\\configs\\attach_configs.json"
+        },
+        "stats": {
+            "fin_frame": {},
+            "fails": {},
+            "sim_time": {},
+            "spf": {}
+        }
+    }
+}

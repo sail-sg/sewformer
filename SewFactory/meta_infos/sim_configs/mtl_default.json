@@ -1,0 +1,8 @@
+{
+    "body_friction": 0.0,
+    "selfCollision": 1,
+    "zero_gravity_steps": 3,
+    "object_intersect_border_threshold": 200,
+    "self_intersect_hit_threshold": 50,
+    "resolution_scale": 4
+}
