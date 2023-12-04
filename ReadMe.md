@@ -42,8 +42,10 @@ ACM Transactions on Graphics (SIGGRAPH Asia 2023)
 ### Prediction
 1. Configure environment. `conda activate garment`
 2. `cd path_to_garment_dev` and run
-  > `python inference.py -c configs/test.yaml -d assets/data/real_images -t real -o outputs/real` for real images
-  > `python inference.py -c configs/test.yaml -d assets/data/deepfashion -t deepfashion -o outputs/deepfashion` for deepfashion dataset
+
+    `python inference.py -c configs/test.yaml -d assets/data/real_images -t real -o outputs/real` for real images
+
+    `python inference.py -c configs/test.yaml -d assets/data/deepfashion -t deepfashion -o outputs/deepfashion` for deepfashion dataset
 3. `cd path_to_garment_dev/SewFactory` and run `& 'C:\Program Files\Autodesk\Maya2020\bin\mayapy.exe' .\data_generator\deepfashion_sim.py` to simulate the predicted sew patterns. (Please prepare the SMPL prediction results and update the predicted data root specified in `deepfashion_sim.py`.)
 
 
