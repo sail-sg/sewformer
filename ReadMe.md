@@ -57,8 +57,11 @@ $\color{#FF0000}{todo:}$ 为什需要& 这个符号？请double check
 ### Installation
 * `conda env create -f environment.yaml`
 
-### Prediction
+### Test
 1. Configure environment. `conda activate garment`
+
+$\color{#FF0000}{todo:}$ download pretrained checkpoint?
+
 2. `cd ./SewFormer` 
 
     for in-the-wild images:
@@ -72,6 +75,9 @@ $\color{#FF0000}{todo:}$ 为什需要& 这个符号？请double check
 3. `cd path_to_garment_dev/SewFactory` and run `& 'C:\Program Files\Autodesk\Maya2020\bin\mayapy.exe' .\data_generator\deepfashion_sim.py` to simulate the predicted sew patterns. (Please prepare the SMPL prediction results with [RSC-Net](https://github.com/xuxy09/RSC-Net) and update the predicted data root specified in `deepfashion_sim.py`.)
 
 $\color{#FF0000}{todo:}$ path_to_garment_dev是指哪里？
+
+### Train
+
 
 ### Acknowledgement
 - [Dataset of 3D Garments with Sewing patterns](https://github.com/maria-korosteleva/Garment-Pattern-Generator/tree/master)
