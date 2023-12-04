@@ -1,0 +1,12 @@
+matplotlib
+sparsemax
+numpy
+requests
+scipy
+wandb
+protobuf
+svglib
+svgwrite
+entmax
+numba
+

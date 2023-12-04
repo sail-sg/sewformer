@@ -1,0 +1,16 @@
+name: garment
+channels:
+  - conda-forge
+  - defaults
+  - pytorch
+  - nvidia
+dependencies:
+  - python=3.10
+  - pip
+  - pytorch 
+  - torchvision 
+  - torchaudio 
+  - pytorch-cuda=12.1
+  - opencv
+  - pip: 
+    - -r requirements.txt 
