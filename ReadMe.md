@@ -47,7 +47,6 @@ $\color{#FF0000}{todo:}$ SMPL related files包含哪些？去哪里下载？
 2. Generate posed smpl files with different pose sequences.
 `& 'C:\Program Files\Autodesk\Maya2020\bin\mayapy.exe' .\data_generator\fbx_anime.py`
 
-$\color{#FF0000}{todo:}$ 为什需要& 这个符号？请double check
 
 3. Simulate the garmetns with different poses.
 `& 'C:\Program Files\Autodesk\Maya2020\bin\mayapy.exe' .\data_generator\data_sim.py`
