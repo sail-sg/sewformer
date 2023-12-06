@@ -16,7 +16,7 @@ ACM Transactions on Graphics (SIGGRAPH Asia 2023)
 
 ### Installation and Configuration
 * We provide an conda env yaml file and the runtime environment can be initialized with`conda env create -f environment.yaml`
-* Clone this repository to `path_to_dev` and `cd path_to_dev/Sewformer`, download the pre-trained [checkpoint]((https://huggingface.co/liulj/garment)) and put it into `assets/ckpts`, then activate the environment `conda activate garment`. 
+* Clone this repository to `path_to_dev` and `cd path_to_dev/Sewformer`, download the pre-trained [checkpoint](https://huggingface.co/liulj/garment) and put it into `assets/ckpts`, then activate the environment `conda activate garment`. 
 
 ### Training
 * Download our provided [dataset]() or **generate your dataset according to [Sewfactory](./Sewfactory/ReadMe.md)** and put it into `path_to_sewfactory`, update the local paths in `system.json` to make sure the dataset setup correctly. Train the model with
