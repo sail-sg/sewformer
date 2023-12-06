@@ -1,0 +1,29 @@
+{
+    "patterns": {
+        "file_root": "examples\\patterns",
+        "sub_patterns": {
+            "one_pieces": [
+                "dress ....",
+                "jumpsuit ....",
+                "wb_dress ... ",
+            ],
+            "tops": [
+                "tee ...", 
+                "tee_sleeveless ...", 
+            ],
+            "bottoms": [
+                "skirt_2_panels ...", 
+                "skirt_2_panels ...",
+                "skirt_2_panels ...",
+                "pants_straight_sides ...", 
+                "wb_pants ...", 
+            ]
+        }
+    },
+    "fbxs_root": "",
+    "fbxs_base_config": "path to meta_infos\\configs\\anime_config.json",
+    "skin_texture_root": "path to examples\\skin_textures",
+    "garment_texture_root": "path to examples\\garment_textures",
+    "sim_configs_root": "path to meta_infos\\sim_configs",
+    "mtl_scene_file": "path to meta_infos\\scene_materials\\metarials.mb"
+}

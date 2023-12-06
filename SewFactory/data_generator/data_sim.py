@@ -1,12 +1,6 @@
 """
     Run or Resume simulation of a pattern dataset with MayaPy standalone mode
     Note that this module is executed in Maya (or by mayapy) and is Python 2.7 friendly.
-
-    How to use: 
-        * fill out system.json with approppriate paths 
-        Running itself:
-        <path_to_maya/bin>/mayapy.exe ./datasim.py --data <dataset folder name> --minibatch <size>  --config <simulation_rendering_configuration.json>
-
 """
 
 from __future__ import print_function
@@ -34,7 +28,7 @@ def get_command_args():
     parser.add_argument('--fbx-root', '-f', help="path root of posed fbxs", 
                         default="test\\posed_fbxs")
     parser.add_argument('--output', '-o', help="save path for simulated dataset (NONE means save in resouce file)",
-                        default="D:\\liulj_dev\\DatasetGenerator\\test\\synthesis")
+                        default="test\\synthesis")
     # parser.add_argument('')
 
     args = parser.parse_args()

@@ -38,7 +38,7 @@
             "object_intersect_border_threshold": 500,
             "self_intersect_hit_threshold": 200,
             "resolution_scale": 4,
-            "attconf_file": "D:\\liulj_dev\\DatasetGenerator\\meta_infos\\configs\\attach_configs.json"
+            "attconf_file": "..\\meta_infos\\configs\\attach_configs.json"
         },
         "stats": {
             "fin_frame": {},
