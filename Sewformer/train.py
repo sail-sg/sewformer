@@ -34,6 +34,7 @@ def get_values_from_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--config', '-c', help='YAML configuration file', type=str, default='./models/att/att.yaml')
+    parser.add_argument('--test-only', '-t',  action='store_true', default=False)
     parser.add_argument('--local_rank', default=0)
     args = parser.parse_args()
 
@@ -41,13 +42,13 @@ def get_values_from_args():
     with open(args.config, 'r') as f:
         config = yaml.safe_load(f)
 
-    return config, args.config
+    return config, args
 
 if __name__ == '__main__':
     from pprint import pprint 
     np.set_printoptions(precision=4, suppress=True)
     import pdb; pdb.set_trace()
-    config, conf_file = get_values_from_args()
+    config, args = get_values_from_args()
     system_info = customconfig.Properties('./system.json')
 
     # DDP
@@ -89,7 +90,13 @@ if __name__ == '__main__':
     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f'Train::Info::Number of params: {n_parameters}')
 
-    trainer.fit(model, model_without_ddp, criterion, rank, config)
+    if not args.test_only:    
+        trainer.fit(model, model_without_ddp, criterion, rank, config)
+    else:
+        config["loss"]["lepoch"] = -1
+        if config["NN"]["pre-trained"] is None or not os.path.exists(config["NN"]["pre-trained"]):
+            print("Train::Error:Pre-trained model should be set for test only mode")
+            raise ValueError("Pre-trained model should be set for test")
 
     # --- Final evaluation ----
     if rank == 0:

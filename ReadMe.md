@@ -25,11 +25,11 @@ The test results will be located at the `output` in `system.json`.
 
 ### Testing
 
-1. Inference sewing patterns with the trained model or our pretrained model:
-* for in-the-wild images:
-    `python inference.py -c configs/test.yaml -d assets/data/real_images -t real -o outputs/real` 
+1. Inference sewing patterns with the trained model or our pretrained model: 
 
-* for deepfashion dataset:
+* evaluate on sewfactory dataset: `torchrun --standalone --nnodes=1 --nproc_per_node=1 train.py -c configs/train.yaml -t`
+
+* inference on in-wild-dataset (for example, deepfashion):
     `python inference.py -c configs/test.yaml -d assets/data/deepfashion -t deepfashion -o outputs/deepfashion` 
 
 2. Simulate the predicted results (Windows):
