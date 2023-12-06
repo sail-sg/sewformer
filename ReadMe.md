@@ -32,7 +32,7 @@ The test results will be located at the `output` in `system.json`.
 * for deepfashion dataset:
     `python inference.py -c configs/test.yaml -d assets/data/deepfashion -t deepfashion -o outputs/deepfashion` 
 
-3. Simulate the predicted results (Windows):
+2. Simulate the predicted results (Windows):
 `cd path_to_dev/SewFactory` and run `path_to_maya\bin\mayapy.exe .\data_generator\deepfashion_sim.py` to simulate the predicted sew patterns. (Please prepare the SMPL prediction results with [RSC-Net](https://github.com/xuxy09/RSC-Net) and update the predicted data root specified in `deepfashion_sim.py`.)
 
 
