@@ -1,0 +1,6 @@
+{
+  "output": "path to put the training logs",
+  "datasets_path": "path to the sewfactory",
+  "sim_root": "path to the sim2real images",
+  "wandb_username": ""
+}  
