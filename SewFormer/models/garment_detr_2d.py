@@ -122,9 +122,8 @@ class GarmentDETRv6(nn.Module):
             # use_gt = random.random() < self.edge_kwargs["gt_prob"] if "gt_prob" in self.edge_kwargs else False
             
             if gt_stitches is not None:
-            # if False:
-                stitch_edges = gt_stitches
-                
+
+                stitch_edges = gt_stitches 
                 edge_node_features = torch.gather(output_edge_embed, 1, stitch_edges.unsqueeze(-1).expand(-1, -1, output_edge_embed.shape[-1]).long())
                 edge_node_features = edge_node_features.masked_fill(gt_edge_mask.unsqueeze(-1).expand(-1, -1, output_edge_embed.shape[-1]) == 0, 0)
             else:
@@ -259,6 +258,81 @@ class SetCriterionWithOutMatcher(nn.Module):
                 full_loss += loss_dict["smpl_joint_loss"]
         
         return full_loss, loss_dict
+    
+    def prediction_stitch_rp(self, outputs, ground_truth):
+        # only support batchsize=1
+
+        if "edge_cls" in outputs:
+            bs, q = outputs["outlines"].shape[0], outputs["rotations"].shape[1]
+            st_edge_pres, st_edge_recls, st_edge_f1s, st_precs, st_recls, st_f1s, st_adj_precs, st_adj_recls, st_adj_f1s = [], [], [], [], [], [], [], [], []
+            
+            # import pdb; pdb.set_trace()
+
+            for b in range(bs):
+                edge_cls_gt = (~ground_truth["free_edges_mask"][b]).flatten()
+                edge_cls_pr = (F.sigmoid(outputs["edge_cls"][b].squeeze(-1)) > 0.5).flatten()
+                cls_rept = classification_report(edge_cls_gt.detach().cpu().numpy(), edge_cls_pr.detach().cpu().numpy(), labels=[0,1])
+                strs = cls_rept.split("\n")[3].split()
+                st_edge_precision, st_edge_recall, st_edge_f1_score = float(strs[1]), float(strs[2]), float(strs[3])
+                edge_similarity = outputs["edge_similarity"][b]
+
+                st_cls_pr = (F.sigmoid(outputs["edge_similarity"][b].squeeze(-1)) > 0.5).flatten()
+                stitch_cls_rept = classification_report(st_cls_pr.detach().cpu().numpy(), ground_truth["stitch_adj"][b].flatten().detach().cpu().numpy(), labels=[0, 1])
+                strs = stitch_cls_rept.split("\n")[3].split()
+                st_adj_edge_precision, st_adj_edge_recall, st_adj_edge_f1_score = float(strs[1]), float(strs[2]), float(strs[3])
+
+                st_adj_precs.append(st_adj_edge_precision)
+                st_adj_recls.append(st_adj_edge_recall)
+                st_adj_f1s.append(st_adj_edge_f1_score)
+
+                if self.config["loss"]["stitches"] == "simple":
+                    simi_matrix = edge_similarity + edge_similarity.transpose(0, 1)
+                simi_matrix = torch.masked_fill(edge_similarity, (~edge_cls_pr).unsqueeze(0), -float("inf"))
+                simi_matrix = torch.masked_fill(simi_matrix, (~edge_cls_pr).unsqueeze(-1), 0)
+                simi_matrix = torch.triu(simi_matrix, diagonal=1)
+                stitches = []
+                num_stitches = edge_cls_pr.nonzero().shape[0] // 2
+                for i in range(num_stitches):
+                    index = (simi_matrix == torch.max(simi_matrix)).nonzero()
+                    stitches.append((index[0, 0].cpu().item(), index[0, 1].cpu().item()))
+                    simi_matrix[index[0, 0], :] = -float("inf")
+                    simi_matrix[index[0, 1], :] = -float("inf")
+                    simi_matrix[:, index[0, 0]] = -float("inf")
+                    simi_matrix[:, index[0, 1]] = -float("inf")
+                
+                st_precision, st_recall, st_f1_score = SetCriterionWithOutMatcher.set_precision_recall(stitches, ground_truth["stitches"][b])
+
+                st_edge_pres.append(st_edge_precision)
+                st_edge_recls.append(st_edge_recall)
+                st_edge_f1s.append(st_edge_f1_score)
+                st_precs.append(st_precision)
+                st_recls.append(st_recall)
+                st_f1s.append(st_f1_score)
+                # print(st_precision, st_recall, st_f1_score)
+
+            return st_edge_pres, st_edge_recls, st_edge_f1s, st_precs, st_recls, st_f1s, st_adj_precs, st_adj_recls, st_adj_f1s
+    
+    @staticmethod
+    def set_precision_recall(pred_stitches, gt_stitches):
+        
+        def elem_eq(a, b):
+            return (a[0] == b[0] and a[1] == b[1]) or (a[0] == b[1] and a[1] == b[0])
+        
+        gt_stitches = gt_stitches.transpose(0, 1).cpu().detach().numpy()
+        true_pos = 0
+        false_pos = 0
+        false_neg = 0
+        for pstitch in pred_stitches:
+            for gstitch in gt_stitches:
+                if elem_eq(pstitch, gstitch):
+                    true_pos += 1
+        false_pos = len(pred_stitches) - true_pos
+        false_neg = len(gt_stitches) - (gt_stitches == -1).sum() / 2  - true_pos
+
+        precision = true_pos / (true_pos + false_pos + 1e-6)
+        recall = true_pos / (true_pos + false_neg)
+        f1_score = 2 * precision * recall / (precision + recall + 1e-6)
+        return precision, recall, f1_score
     
     def with_quality_eval(self, ):
         if hasattr(self.composed_loss, "with_quality_eval"):

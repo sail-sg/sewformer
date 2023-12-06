@@ -38,10 +38,10 @@ def _dict_to_tensors(dict_obj):  # helper
                 new_dict[key] = torch.from_numpy(value)
 
                 # TODO more stable way of converting the types (or detecting ints)
-                if value.dtype not in [np.int, np.int64, np.bool]:
+                if value.dtype not in [int, np.int64, bool]:
                     new_dict[key] = new_dict[key].float()  # cast all doubles and ofther stuff to floats
             else:
-                new_dict[key] = torch.tensor(value)  # just try directly, if nothing else works
+                new_dict[key] = torch.tensor(np.asarray(value)).float()  # just try directly, if nothing else works
     return new_dict
 
 
@@ -288,35 +288,3 @@ if __name__ == '__main__':
         plt.tight_layout()
         fig.savefig("test_aug_{}.png".format(idx))
         plt.close(fig)
-    
-
-    # img_fn = "/home/aiops/liulj/garment_outputs/detr_2d_garment/outputs/evaluate_data_folders_test/0000_front/0000_front.png"
-    # img_fn = "mask_img.png"
-    # smpl_fn = "test_smpl_uv_1.png"
-    # # torch.manual_seed(0)
-    # orig_img = np.array(Image.open(img_fn).convert("RGB"), np.float32)
-    # orig_smpl = np.array(Image.open(smpl_fn).convert("RGB"),  np.float32)
-    # print(orig_img.dtype, orig_smpl.dtype)
-    # print(isinstance(orig_img, np.ndarray), isinstance(orig_smpl, np.ndarray))
-    # to_tensor_transformer = make_image_transforms()
-    # geo_transformer = make_image_geo_augments()
-    # color_transformer = make_image_color_augments()
-    # de_transform = denormalize_img_transforms()
-    # # orig_img = to_tensor_transformer(orig_img)
-    # for idx in range(1):
-    #     imgs, smpls = [], []
-    #     for _ in range(16):
-    #         print(type(orig_img))
-    #         transformed = geo_transformer(image=orig_img, mask=orig_smpl)
-    #         trans_img, trans_smpl = transformed["image"], transformed["mask"]
-    #         print(type(orig_img))
-    #         trans_img = color_transformer(image=trans_img)["image"]
-    #         trans_img_tensor = to_tensor_transformer(image=trans_img)["image"]
-    #         trans_smpl_tensor = to_tensor_transformer(image=trans_smpl)["image"]
-    #         print(trans_img_tensor.shape, trans_smpl_tensor.shape)
-    #         img_ori = de_transform(trans_img_tensor)
-    #         smpl_ori = de_transform(trans_smpl_tensor)
-    #         imgs.append(np.array(img_ori))
-    #         smpls.append(np.array(smpl_ori))
-    #     plot(imgs, "{}_img".format(idx), False)
-    #     plot(smpls, "{}_smpl".format(idx), False)

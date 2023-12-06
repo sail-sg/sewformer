@@ -143,12 +143,12 @@ if __name__ == "__main__":
     if args.test_type != "sewfactory":
         shape_dataset, shape_datawrapper = shape_experiment.load_detr_dataset(
             [],   # assuming dataset root structure
-            {'obj_filetag': '', 'point_noise_w': 0, 'feature_caching': False, 'gt_caching':False},    # NOTE: one can change some data configuration for evaluation purposes here!
+            {'feature_caching': False, 'gt_caching':False},    # NOTE: one can change some data configuration for evaluation purposes here!
             unseen=True, batch_size=1)
     else:
         shape_dataset, shape_datawrapper = shape_experiment.load_detr_dataset(
             Path(system_info['datasets_path'])  if args.unseen else system_info['datasets_path'],   # assuming dataset root structure
-            {'obj_filetag': '', 'point_noise_w': 0, 'feature_caching': False, 'gt_caching':False},    # NOTE: one can change some data configuration for evaluation purposes here!
+            {'feature_caching': False, 'gt_caching':False},    # NOTE: one can change some data configuration for evaluation purposes here!
             unseen=args.unseen, batch_size=1)
     
     shape_model, criterion, device = shape_experiment.load_detr_model(shape_dataset.config, others=False)

@@ -4,20 +4,17 @@
 # 0.5 * stitch cls loss (focal loss) + 0.005 * stitch ce loss + 5 * panel loss
 
 experiment:
-  project_name: Garments-Reconstruction
-  run_name: Detr2d-V6-final-dif-ce-focal-schd-agp
+  project_name: Pattern-Recovery
+  run_name: Training
   run_id: 
-  local_dir: ./garment_outputs/Detr2d-V6-final-dif-ce-focal-schd-agp
+  local_dir: 
+  is_training: True
 
 # ----- Dataset-related properties -----
-dataset:
-  class: GarmentDetrDataset   
+dataset: 
+  class: GarmentDetrDataset
   wrapper: RealisticDatasetDetrWrapper
 
-  data_folders:
-  unseen_data_folders:
-
-  # Loadable parameters -- overrwitten if old_experiment is specified
   max_pattern_len: 23   # Overridden if panel_classification is specified
   max_panel_len: 14
   max_num_stitches: 28   # when training with stitches
@@ -26,14 +23,15 @@ dataset:
   element_size: 4
   rotation_size: 4
   translation_size: 3
-  augment: true
   use_sim: true
   use_smpl_loss: true
-
   img_size: 1024
-  
+  augment: true
+
   panel_classification: ./assets/data_configs/panel_classes_condenced.json 
   filter_by_params: ./assets/data_configs/param_filter.json
+  
+
   standardize:
     gt_scale:
       outlines: [26.674109  , 29.560705,  1,  1]
@@ -47,16 +45,18 @@ dataset:
       translations: [-55.25636 , -20.001333, -17.086796]
 
 data_split:
-  
+  type: percent
+  split_on: folder
+  valid_per_type: 5
+  test_per_type: 90
 
 
 # ----- Network Architecture --------
+
 NN:
-  pre-trained: ./assets/ckpts/Detr2d-V6-final-dif-ce-focal-schd-agp_checkpoint_37.pth
+  pre-trained:  
   step-trained: 
-
   model: GarmentDETRv6
-
   # Backbone
   frozen_weights: 
   masks: 
@@ -74,7 +74,7 @@ NN:
   dropout: 0.1
   nheads: 8 
   num_queries: 25
-  pre_norm: True 
+  pre_norm: True
 
   # ----- Losses ----
   loss:
@@ -86,23 +86,22 @@ NN:
       rotation_loss_weight: 1. 
       translation_loss_weight: 1.
     stitches: ce                  # ce, simple
-    lepoch: -1
+    lepoch: 0
     eos_coef: 0.1
     aux_loss: false
     panel_origin_invariant_loss: False
     panel_order_inariant_loss: False  # False to use ordering as in the data_config
     epoch_with_order_matching: 0
     order_by: shape_translation   # placement, translation, stitches, shape_translation
-    
 
 # ------- Trainer -----
 trainer: 
   dry_run: False
+  random_seed: 1
   batch_size: 64
   devices: [0]
   without_matcher: true
   epochs: 40
-  random_seed: 0
   lr: 0.0002
   lr_backbone: 1e-5
   optimizer: AdamW
@@ -113,5 +112,8 @@ trainer:
   early_stopping:
     window: 0.0001
     patience: 50
-  with_visualization: True  # Log visualizations of predicted sewing patterns
-  return_stitches: false
+  with_visualization: true  # Log visualizations of predicted sewing patterns
+  return_stitches: true
+
+
+

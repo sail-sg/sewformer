@@ -10,6 +10,8 @@ import numpy as np
 import svgwrite
 from svglib import svglib
 from reportlab.graphics import renderPM
+import cairosvg
+
 
 # my
 import customconfig
@@ -186,8 +188,9 @@ class VisPattern(core.ParametrizedPattern):
         dwg.save(pretty=True)
 
         # to png
-        svg_pattern = svglib.svg2rlg(svg_filename)
-        renderPM.drawToFile(svg_pattern, png_filename, fmt='PNG')
+        # svg_pattern = svglib.svg2rlg(svg_filename)
+        # renderPM.drawToFile(svg_pattern, png_filename, fmt='PNG')
+        cairosvg.svg2png(url=svg_filename, write_to=png_filename)
 
 
     def _save_as_image_split(self, svg_filename, png_filename):
@@ -226,8 +229,9 @@ class VisPattern(core.ParametrizedPattern):
             dwg.save(pretty=True)
 
             # to png
-            svg_pattern = svglib.svg2rlg(type_svg_filename)
-            renderPM.drawToFile(svg_pattern, type_png_filename, fmt='PNG')
+            # svg_pattern = svglib.svg2rlg(type_svg_filename)
+            # renderPM.drawToFile(svg_pattern, type_png_filename, fmt='PNG')
+            cairosvg.svg2png(url=svg_filename, write_to=png_filename)
 
 
 class RandomPattern(VisPattern):
@@ -277,178 +281,4 @@ if __name__ == "__main__":
     random.seed(timestamp)
 
     system_config = customconfig.Properties('./system.json')
-    # base_path = system_config['output']
-    # pattern = VisPattern(os.path.join(system_config['templates_path'], 'skirts', 'skirt_4_panels.json'))
-    # pattern = VisPattern(os.path.join(system_config['templates_path'], 'basic tee', 'tee.json'))
-    # pattern = VisPattern(os.path.join(
-    #     base_path, 
-    #     'nn_pred_data_1000_tee_200527-14-50-42_regen_200612-16-56-43200803-10-10-41', 
-    #     'test', 'tee_00A2ZO1ELB', '_predicted_specification.json'))
-    # pattern = VisPattern(os.path.join(
-    #     r"J:\devprojs\all_predictions\nn_pred_baseline2\Used\dress_sleeveless_1DQXB8EDT8__0000_270_30",
-    #     "_predicted_specification.json"
-    # ))
-
-    # example 1 dress
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\dress_sleeveless_1DQXB8EDT8__0000_270_30",
-    #     "_predicted_4.045220375061035_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\dress_sleeveless_1DQXB8EDT8__0000_270_30"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\dress_sleeveless_1DQXB8EDT8__0000_270_30",
-    #     "_gt_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\dress_sleeveless_1DQXB8EDT8__0000_270_30"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\nn_pred_baseline2_Used\Used\dress_sleeveless_1DQXB8EDT8__0000_270_30",
-    #     "_predicted_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\nn_pred_baseline2_Used\Used\dress_sleeveless_1DQXB8EDT8__0000_270_30"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\nn_baseline1_Used\Used\dress_sleeveless_1DQXB8EDT8__0000_270_30",
-    #     "_predicted_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\nn_baseline1_Used\Used\dress_sleeveless_1DQXB8EDT8__0000_270_30"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # example 2 jumpsuit
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\jumpsuit_sleeveless_M2U1PF8Y85__-0050_150_0",
-    #     "_predicted_4.010537624359131_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\jumpsuit_sleeveless_M2U1PF8Y85__-0050_150_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\jumpsuit_sleeveless_M2U1PF8Y85__-0050_150_0",
-    #     "_gt_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\jumpsuit_sleeveless_M2U1PF8Y85__-0050_150_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\nn_pred_baseline2_Used\Used\jumpsuit_sleeveless_M2U1PF8Y85__-0050_150_0",
-    #     "_predicted_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\nn_pred_baseline2_Used\Used\jumpsuit_sleeveless_M2U1PF8Y85__-0050_150_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\nn_baseline1_Used\Used\jumpsuit_sleeveless_M2U1PF8Y85__-0050_150_0",
-    #     "_predicted_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\nn_baseline1_Used\Used\jumpsuit_sleeveless_M2U1PF8Y85__-0050_150_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # example 3
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\tee_sleeveless_OYSVR7N3W9_wb_pants_straight_X72AWWT1LM__-0050_240_0",
-    #     "_predicted_4.242624282836914_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\tee_sleeveless_OYSVR7N3W9_wb_pants_straight_X72AWWT1LM__-0050_240_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\tee_sleeveless_OYSVR7N3W9_wb_pants_straight_X72AWWT1LM__-0050_240_0",
-    #     "_gt_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\tee_sleeveless_OYSVR7N3W9_wb_pants_straight_X72AWWT1LM__-0050_240_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\nn_pred_baseline2_Used\Used\tee_sleeveless_OYSVR7N3W9_wb_pants_straight_X72AWWT1LM__-0050_240_0",
-    #     "_predicted_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\nn_pred_baseline2_Used\Used\tee_sleeveless_OYSVR7N3W9_wb_pants_straight_X72AWWT1LM__-0050_240_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\nn_baseline1_Used\Used\tee_sleeveless_OYSVR7N3W9_wb_pants_straight_X72AWWT1LM__-0050_240_0",
-    #     "_predicted_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\nn_baseline1_Used\Used\tee_sleeveless_OYSVR7N3W9_wb_pants_straight_X72AWWT1LM__-0050_240_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # example 4
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\tee_sleeveless_FPUPST1M98_skirt_4_panels_VOFVQUW1B6__-0050_210_0",
-    #     "_predicted_4.235896110534668_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\tee_sleeveless_FPUPST1M98_skirt_4_panels_VOFVQUW1B6__-0050_210_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\tee_sleeveless_FPUPST1M98_skirt_4_panels_VOFVQUW1B6__-0050_210_0",
-    #     "_gt_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\tee_sleeveless_FPUPST1M98_skirt_4_panels_VOFVQUW1B6__-0050_210_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\nn_pred_baseline2_Used\Used\tee_sleeveless_FPUPST1M98_skirt_4_panels_VOFVQUW1B6__-0050_210_0",
-    #     "_predicted_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\nn_pred_baseline2_Used\Used\tee_sleeveless_FPUPST1M98_skirt_4_panels_VOFVQUW1B6__-0050_210_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\nn_baseline1_Used\Used\tee_sleeveless_FPUPST1M98_skirt_4_panels_VOFVQUW1B6__-0050_210_0",
-    #     "_predicted_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\nn_baseline1_Used\Used\tee_sleeveless_FPUPST1M98_skirt_4_panels_VOFVQUW1B6__-0050_210_0"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # deep fashion 
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\dp-Detr2d-V6-final-dif-ce-focal-schd-agp-dp\WOMEN-Blouses_Shirts-id_00000276-07_4_full",
-    #     "_predicted_single_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\dp-Detr2d-V6-final-dif-ce-focal-schd-agp-dp\WOMEN-Blouses_Shirts-id_00000276-07_4_full"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\NeuralTailor-baseline1\WOMEN-Blouses_Shirts-id_00000276-07_4_full",
-    #     "_predicted_single_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\NeuralTailor-baseline1\WOMEN-Blouses_Shirts-id_00000276-07_4_full"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    # pattern = VisPattern(os.path.join(
-    #     r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\tee_3U795JC42C_wb_pants_straight_TOD5QMXI9U__-0050_210_30",
-    #     "_gt_specification.json"
-    # ))
-    # log_folder = r"E:\liulj_dev\Detr2d-V6-final-dif-ce-focal-schd-agp-Used\Used\tee_3U795JC42C_wb_pants_straight_TOD5QMXI9U__-0050_210_30"
-    # os.makedirs(log_folder, exist_ok=True)
-
-    pattern = VisPattern(os.path.join(
-        r"E:\liulj_dev\deepfashion\dp-Detr2d-V6-final-dif-ce-focal-schd-agp-dp\WOMEN-Sweatshirts_Hoodies-id_00003308-02_7_additional",
-        "_predicted_single_specification.json"
-    ))
-    log_folder = r"E:\liulj_dev\deepfashion\dp-Detr2d-V6-final-dif-ce-focal-schd-agp-dp\WOMEN-Sweatshirts_Hoodies-id_00003308-02_7_additional"
-    os.makedirs(log_folder, exist_ok=True)
-
-
-
-
-
-    # newpattern = RandomPattern(os.path.join(system_config['templates_path'], 'basic tee', 'tee.json'))
-
-    # log to file
-    # log_folder = 'panel_vissize_' + datetime.now().strftime('%y%m%d-%H-%M-%S')
-    # log_folder = os.path.join(base_path, log_folder)
     
-
-    pattern.serialize(log_folder, to_subfolder=False)
-    # newpattern.serialize(log_folder, to_subfolder=False)
-
-    # log random seed
-    with open(log_folder + '/random_seed.txt', 'w') as f_rand:
-        f_rand.write(str(timestamp))

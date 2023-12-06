@@ -15,7 +15,7 @@ def eval_detr_metrics(model, criterion, data_warpper, rank=0, section='test'):
     data_warpper.dataset.set_training(False)
 
     with torch.no_grad():
-        loader = data_warpper.get_loader(section=section)
+        loader = data_warpper.get_loader(data_section=section)
         print("eval on {}, len = {}".format(section, len(loader)))
         return _eval_detr_metrics_per_loader(model, criterion, loader, device)
 

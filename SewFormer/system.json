@@ -1,6 +1,6 @@
 {
   "output": "",
-  "datasets_path": [],
+  "datasets_path": "",
   "sim_root": "",
   "wandb_username": ""
 }  

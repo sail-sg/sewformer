@@ -34,50 +34,36 @@ from data.utils import euler_angle_to_rot_6d
 
 
 class GarmentDetrDataset(Dataset):
-    def __init__(self, root_dir, start_config, gt_caching=False, feature_caching=False, in_transforms=[]):
+    def __init__(self, root_dir, sim_root, start_config, gt_caching=False, feature_caching=False, in_transforms=[]):
+
         self.root_path = root_dir
+        self.sim_root = sim_root
         self.config = {}
         pattern_size_initialized = self.update_config(start_config)
         self.config['class'] = self.__class__.__name__
-        self.data_folders = self.root_path if isinstance(self.root_path, list) else [self.root_path]
-        self.data_folders_nicknames = dict(zip(self.data_folders, self.data_folders))
         self.datapoints_names = []
         self.dataset_start_ids = []  # (folder, start_id) tuples -- ordered by start id
         
 
-        self.read_error_lst = []
-        dry_run = True
         try:
-            for data_folder in self.data_folders:
-                print(data_folder)
-                _, dirs, _ = next(os.walk(data_folder))
-                for d in dirs:
-                    self.dataset_start_ids.append((d, len(self.datapoints_names)))
-                    if os.path.exists(os.path.join(data_folder, d, "renders")):
-                        gt_folder = os.path.join(data_folder, d, "static")
-                        img_names = [fn for fn in os.listdir(os.path.join(data_folder, d, "renders")) if fn.endswith(".png")]
-                        sim_names = [os.path.join(self.config["sim_root"], data_folder.replace(self.config["ori_root"], ""), d, fn) for fn in img_names]
-
-                        for img_name in sim_names:
-                            if os.path.exists(img_name):
-                                merge_names = [(img_name, None, gt_folder)]
-                                self.datapoints_names += merge_names
-
-                                if dry_run:
-                                    if len(self.datapoints_names) > 2000:
-                                        break
-                    else:
-                        gt_folder = os.path.join(data_folder, d)
-                        merge_names = [(None, None, gt_folder)]
-                        self.datapoints_names += merge_names
-                        if dry_run:
-                            if len(self.datapoints_names) > 2000:
-                                break
-                        print(len(self.datapoints_names))
+            folders = [folder for folder in os.listdir(self.root_path) if os.path.isdir(os.path.join(self.root_path, folder))]
+            for folder in folders:
+                self.dataset_start_ids.append((folder, len(self.datapoints_names)))
+                if os.path.exists(os.path.join(self.root_path, folder, "renders")):
+                    gt_folder = os.path.join(self.root_path, folder, "static")
+                    img_names = [os.path.join(self.sim_root, folder, fn) for fn in os.listdir(os.path.join(self.root_path, folder, "renders")) if fn.endswith(".png")]
+                    for img_name in img_names:
+                        if os.path.exists(img_name):
+                            merge_names = [(img_name, None, gt_folder)]
+                            self.datapoints_names += merge_names
+                else:
+                    gt_folder = os.path.join(self.root_path, folder)
+                    merge_names = [(None, None, gt_folder)]
+                    self.datapoints_names += merge_names
         except Exception as e:
             print(e)
         
-        self.dataset_start_ids.append((None, len(self.datapoints_names)))  # add the total len as item for easy slicing
+        self.dataset_start_ids.append((None, len(self.datapoints_names)))
         self.config['size'] = len(self)
         print("GarmentDetrDataset::Info::Total valid datanames is {}".format(self.config['size']))
 
@@ -89,7 +75,7 @@ class GarmentDetrDataset(Dataset):
             print('GarmentDetrDataset::Info::Storing datapoints feature info in memory')
         
         self.color_transform = transforms.tv_make_color_img_transforms()
-        self.geo_tranform = transforms.tv_make_geo_img_transforms(color=255 if not self.config["use_smpl"] else 0)
+        self.geo_tranform = transforms.tv_make_geo_img_transforms(color=255)
         self.img_transform = transforms.tv_make_img_transforms()
 
         self.transforms = [transforms.SampleToTensor()] + in_transforms
@@ -236,16 +222,12 @@ class GarmentDetrDataset(Dataset):
 
         img, ground_truth, smpl_uv = self._get_sample_info(datapoint_name, gt_folder, smpl_name)
         img = rst(img)
-        if smpl_uv is not None:
-            smpl_uv = rst(smpl_uv)
-
         name = os.path.basename(os.path.dirname(gt_folder))
         folder = os.path.dirname(gt_folder)
 
         if "use_smpl_loss" in self.config and  self.config["use_smpl_loss"]:
             smpl_pos_fn = self.get_smpl_pose_fn(datapoint_name, gt_folder)
             smpl_joint_pose = json.load(open(smpl_pos_fn, "r"))["pose"]
-            # smpl_joint_pose = [euler_angle_to_rod_mat(p) for p in smpl_joint_pose[1:23]]
             smpl_joint_pose = [euler_angle_to_rot_6d(p) for p in smpl_joint_pose[1:23]]
             smpl_joint_pose = np.array(smpl_joint_pose).squeeze()
             ground_truth.update({"smpl_joints": smpl_joint_pose})
@@ -275,6 +257,11 @@ class GarmentDetrDataset(Dataset):
         for transform in self.transforms:
             sample = transform(sample)
         return sample
+    
+    def _swap_name(self, name):
+        # sim root to original root
+        name = name.replace(self.sim_root, self.root_path).split('/')
+        return '/'.join(name[:-1] + ["renders"] + name[-1:])
     
     def _load_gt_folders_from_indices(self, indices):
         gt_folders = [self.datapoints_names[idx][-1] for idx in indices]
@@ -376,7 +363,6 @@ class GarmentDetrDataset(Dataset):
             elif len(valid_datanames) > 0 and self.get_simple_names(self.datapoints_names[idx], data_root=dataset_root) in valid_datanames:
                 valid_ids.append(idx)
             else:
-                # print("Not Found: {}".format(self.get_simple_names(self.datapoints_names[idx], data_root=dataset_root)))
                 continue
             
             if idx % 1000 == 0:
@@ -401,14 +387,10 @@ class GarmentDetrDataset(Dataset):
             try:
                 image = Image.open(datapoint_name).convert('RGB')
             except Exception as e:
-                image = Image.open(self.sim2ori[datapoint_name]).convert('RGB')
-                if datapoint_name not in self.read_error_lst:
-                    self.read_error_lst.append(datapoint_name)
-                    print(f"Error Image fn: {datapoint_name}")
-
+                image = Image.open(self._swap_name(datapoint_name)).convert('RGB')
             if self.feature_caching:
                 self.feature_cached[datapoint_name] = image
-            smpl_uv = None
+
         # GT -- pattern
         if gt_folder in self.gt_cached: # might not be compatible with list indexing
             ground_truth = self.gt_cached[gt_folder]
@@ -417,7 +399,7 @@ class GarmentDetrDataset(Dataset):
             ground_truth = self._get_pattern_ground_truth(gt_folder, folder_elements, spec_dict)
             if self.gt_caching:
                 self.gt_cached[gt_folder] = ground_truth
-        return image, ground_truth, smpl_uv
+        return image, ground_truth, None
     
     def _load_spec_dict(self, gt_folder):
         if gt_folder in self.gt_jsons["spec_dict"]:
@@ -431,7 +413,6 @@ class GarmentDetrDataset(Dataset):
                 spec = PureWindowsPath(val["spec"]).parts[-1]
                 spec_dict[key]["spec"] = spec
                 spec_dict[key]["delta"] = np.array(val["delta"]) - np.array(static_root)
-                # print("debug: spec:{}, last_delta: {}".format(spec,  spec_dict[key]["delta"]))
             self.gt_jsons["spec_dict"][gt_folder] = spec_dict
             return spec_dict
     
@@ -468,7 +449,7 @@ class GarmentDetrDataset(Dataset):
     def _empty_panels_mask(self, num_edges):
         """Empty panels as boolean mask"""
 
-        mask = np.zeros(len(num_edges), dtype=np.bool)
+        mask = np.zeros(len(num_edges), dtype=bool)
         mask[num_edges == 0] = True
 
         return mask
@@ -521,6 +502,7 @@ class GarmentDetrDataset(Dataset):
                       pad_panels_to_len=None, pad_panel_num=None, pad_stitches_num=None,
                       with_placement=False, with_stitches=False, with_stitch_tags=False):
         """Read given pattern in tensor representation from file"""
+        
 
         spec_list = {}
         for key, val in spec_dict.items():
@@ -615,7 +597,7 @@ class GarmentDetrDataset(Dataset):
         """
         Construct the mask to identify edges that are not connected to any other
         """
-        mask = np.ones((pattern.shape[0], pattern.shape[1]), dtype=np.bool)
+        mask = np.ones((pattern.shape[0], pattern.shape[1]), dtype=bool)
         max_edge = pattern.shape[1]
 
         for side in stitches[:, :num_stitches]:  # ignore the padded part
@@ -656,7 +638,6 @@ class GarmentDetrDataset(Dataset):
 
 
     def save_gt_batch_imgs(self, gt_batch, datanames, data_folders, save_to):
-
         gt_imgs = []
         for idx, (name, folder) in enumerate(zip(datanames, data_folders)):
             gt = {}
@@ -717,7 +698,6 @@ class GarmentDetrDataset(Dataset):
             Saves predicted params of the datapoint to the requested data folder.
             Returns list of paths to files with prediction visualizations
             Assumes that the number of predictions matches the number of provided data names"""
-        
 
         prediction_imgs = []
         for idx, (name, folder) in enumerate(zip(datanames, data_folders)):
@@ -789,7 +769,7 @@ class GarmentDetrDataset(Dataset):
         gt_scales = self.config['standardize']['gt_scale']
 
         for key in gt_shifts:
-            if key == 'stitch_tags' and not self.config['explicit_stitch_tags']:  
+            if key == 'stitch_tags':  
                 # ignore stitch tags update if explicit tags were not used
                 continue
             
@@ -827,7 +807,25 @@ class GarmentDetrDataset(Dataset):
         return pattern
     
 
+if __name__ == '__main__':
+    from data.wrapper import RealisticDatasetDetrWrapper
+    import pdb; pdb.set_trace()
+    system = Properties('./system.json')
+    start_config = {"panel_classification": "./data_configs/panel_classes_condenced.json",
+                    "max_pattern_len": 23, "max_panel_len": 14, "max_num_stitches": 28,
+                    "max_stitch_edges": 56, "element_size": 4, "rotation_size": 4, "translation_size": 3,
+                    "use_sim": True, "use_smpl_loss": True, "augment": True}
+    dataset = GarmentDetrDataset(system['datasets_path'], None, start_config)
+    example_data = dataset[0]
+    split_info = {"type": "percent", "split_on": "folder", "valid_per_type": 5, "test_per_type": 10}
+    datawrapper = RealisticDatasetDetrWrapper(dataset, batch_size=64)
+    datawrapper.load_split(split_info, batch_size=64)
+    datawrapper.standardize_data()
 
+
+
+
+    
 
 
 

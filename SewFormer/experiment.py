@@ -36,6 +36,8 @@ class ExperimentWrappper(object):
         self.run_name = config['experiment'].get('run_name', None)
         self.run_id = config['experiment'].get('run_id', None)
         self.run_local_path = config['experiment'].get('local_dir', None)
+        if config['experiment']['is_training'] and self.run_local_path is not None:
+            os.makedirs(self.run_local_path, exist_ok=True)
 
         self.no_sync = no_sync
 
@@ -187,7 +189,6 @@ class ExperimentWrappper(object):
             artifact.add_file(str(path))
         else:
             artifact.add_dir(str(path))
-                    
         wb.run.log_artifact(artifact)
 
         if not self.initialized:
@@ -220,13 +221,11 @@ class ExperimentWrappper(object):
         dataset = data_class(data_root, data_config, 
                              gt_caching=data_config['gt_caching'], 
                              feature_caching=data_config['feature_caching'])
-        # datawrapper = data.DatasetWrapper(dataset, known_split=split, batch_size=batch_size)
         if 'wrapper' in data_config and data_config["wrapper"] is not None:
             datawrapper_class = getattr(data, data_config["wrapper"])
             datawrapper = datawrapper_class(dataset, known_split=split, batch_size=batch_size)
         else:
-            # datawrapper = data.DatasetWrapper(dataset)
-            datawrapper = data.RealisticDatasetWrapper(dataset, known_split=split, batch_size=batch_size)
+            datawrapper = data.RealisticDatasetDetrWrapper(dataset, known_split=split, batch_size=batch_size)
 
         return dataset, datawrapper
     
@@ -326,6 +325,11 @@ class ExperimentWrappper(object):
         if not self.run_id:
             raise RuntimeError('ExperimentWrappper:Error:Need to know run id to get path in wandb could')
         return self.wandb_username + '/' + self.project + '/' + self.run_id
+    
+    def local_wandb_path(self):
+        # if self.initialized:
+        print(wb.run.dir)
+        return Path(wb.run.dir)
 
     def local_artifact_path(self):
         """create & maintain path to save files to-be-commited-as-artifacts"""
@@ -354,11 +358,11 @@ class ExperimentWrappper(object):
             NOTE: cloud has a priority as it might contain up-to-date information
         """
 
-        if 'pre-trained' in self.in_config['experiment']:
+        if 'pre-trained' in self.in_config['experiment'] and self.in_config['experiment']['pre-trained'] is not None and os.path.exists(self.in_config['experiment']['pre-trained']):
             # local model available
             print(f'{self.__class__.__name__}::Info::Loading locally saved model')
             return self._load_model_from_file(self.in_config['experiment']['pre-trained'], device)
-        elif 'pre-trained' in self.in_config['NN']:
+        elif 'pre-trained' in self.in_config['NN'] and self.in_config['NN']['pre-trained'] is not None and os.path.exists(self.in_config['NN']['pre-trained']): 
             # local model available
             print(f'{self.__class__.__name__}::Info::Loading locally saved model')
             return self._load_model_from_file(self.in_config['NN']['pre-trained'], device)

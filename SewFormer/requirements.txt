@@ -9,4 +9,6 @@ svglib
 svgwrite
 entmax
 numba
+pytz
+cairosvg
 

@@ -157,7 +157,7 @@ class NNSewingPattern(VisPattern):
                 ))
         # Padded value is zero allows to treat the whole thing as index array
         # But need care when using -- as indexing will not crush when padded values are not filtered
-        stitches_indices = np.ones((2, stitches_num), dtype=np.int) * (-1)
+        stitches_indices = np.ones((2, stitches_num), dtype=int) * (-1)
         if with_stitch_tags:
             # padding happens automatically, if panels are padded =)
             stitch_tags = np.vstack([pat.stitches_as_tags() for pat in patterns])

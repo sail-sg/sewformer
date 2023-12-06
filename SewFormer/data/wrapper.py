@@ -58,6 +58,7 @@ class RealisticDatasetDetrWrapper(object):
     """
 
     def __init__(self, in_dataset, known_split=None, batch_size=None, shuffle_train=True):
+        
         self.dataset = in_dataset
         self.data_section_list = ['full', 'train', 'validation', 'test']
 
@@ -135,8 +136,8 @@ class RealisticDatasetDetrWrapper(object):
                                                 pin_memory=True,
                                                 shuffle=shuffle_train)
 
-            self.loaders.validation = DataLoader(self.validation, self.batch_size, num_workers=12)
-            self.loaders.test = DataLoader(self.test, self.batch_size, num_workers=12)
+            self.loaders.validation = DataLoader(self.validation, self.batch_size, collate_fn=collate_fn, num_workers=12)
+            self.loaders.test = DataLoader(self.test, self.batch_size, collate_fn=collate_fn, num_workers=12)
         return self.loaders.train, self.loaders.validation, self.loaders.test
 
     def _loaders_dict(self, subsets_dict, batch_size, shuffle=False):
@@ -222,7 +223,7 @@ class RealisticDatasetDetrWrapper(object):
                     _, _, datanames = self.dataset.get_item_infos(idx)
                     data_lists[name].append(datanames)
 
-            save_path = f"./nn/data_configs/data_split.json"
+            save_path = f"./data_configs/data_split.json"
             json.dump(data_lists, open(save_path, "w"), indent=2)
             split_info['filename'] = save_path
 
