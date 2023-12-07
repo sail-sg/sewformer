@@ -16,24 +16,28 @@ ACM Transactions on Graphics (SIGGRAPH Asia 2023)
 
 ### Installation and Configuration
 * Clone this repository to `path_to_dev` and `cd path_to_dev/Sewformer`, download the pre-trained [checkpoint](https://huggingface.co/liulj/garment) and put it into `assets/ckpts`.
-* We provide a conda env file and the runtime environment can be initialized with`conda env create -f environment.yaml`, then activate the environment `conda activate garment`. 
+* The environment can be initialized with `conda env create -f environment.yaml`. Then you can activate the environment `conda activate garment`. 
 
 ### Training
-* Download our provided [dataset]() or **generate your dataset according to [SewFactory](./SewFactory/ReadMe.md)** and put it into `path_to_sewfactory`, update the local paths in `system.json` to make sure the dataset setup correctly. Train the model with
+* Download our provided [dataset]() and put it into `path_to_sewfactory`, update the local paths in `system.json` to make sure the dataset setup correctly. 
+* Train the model with
 `torchrun --standalone --nnodes=1 --nproc_per_node=1 train.py -c configs/train.yaml`
-The test results will be located at the `output` in `system.json`.
+
+  The output will be located at the `output` in `system.json`.
 
 ### Testing
 
-1. Inference sewing patterns with the trained model or our pretrained model: 
+1. Inference sewing patterns with the pretrained model: 
 
 * evaluate on sewfactory dataset: `torchrun --standalone --nnodes=1 --nproc_per_node=1 train.py -c configs/train.yaml -t`
 
-* inference on real images (for example, deepfashion):
+* inference on real images (e.g. from deepfashion):
     `python inference.py -c configs/test.yaml -d assets/data/deepfashion -t deepfashion -o outputs/deepfashion` 
 
 2. Simulate the predicted results (Windows):
 `cd path_to_dev/SewFactory` and run `path_to_maya\bin\mayapy.exe .\data_generator\deepfashion_sim.py` to simulate the predicted sew patterns. (Please prepare the SMPL prediction results with [RSC-Net](https://github.com/xuxy09/RSC-Net) and update the predicted data root specified in `deepfashion_sim.py`.)
+
+    See more details about the SewFactory dataset and the simulation details [here](./SewFactory/ReadMe.md)
 
 
 
