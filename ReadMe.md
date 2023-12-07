@@ -37,7 +37,7 @@ ACM Transactions on Graphics (SIGGRAPH Asia 2023)
 2. Simulate the predicted results (Windows):
 `cd path_to_dev/SewFactory` and run `path_to_maya\bin\mayapy.exe .\data_generator\deepfashion_sim.py` to simulate the predicted sew patterns. (Please prepare the SMPL prediction results with [RSC-Net](https://github.com/xuxy09/RSC-Net) and update the predicted data root specified in `deepfashion_sim.py`.)
 
-    See more details about the SewFactory dataset and the simulation details [here](./SewFactory/ReadMe.md)
+    See more details about the SewFactory dataset and the simulation [here](./SewFactory/ReadMe.md).
 
 
 
