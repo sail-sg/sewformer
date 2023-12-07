@@ -15,7 +15,7 @@ ACM Transactions on Graphics (SIGGRAPH Asia 2023)
 ---------------------------
 
 ### Installation and Configuration
-* We provide an conda env yaml file and the runtime environment can be initialized with`conda env create -f environment.yaml`
+* We provide a conda env file and the runtime environment can be initialized with`conda env create -f environment.yaml`
 * Clone this repository to `path_to_dev` and `cd path_to_dev/Sewformer`, download the pre-trained [checkpoint](https://huggingface.co/liulj/garment) and put it into `assets/ckpts`, then activate the environment `conda activate garment`. 
 
 ### Training
@@ -29,7 +29,7 @@ The test results will be located at the `output` in `system.json`.
 
 * evaluate on sewfactory dataset: `torchrun --standalone --nnodes=1 --nproc_per_node=1 train.py -c configs/train.yaml -t`
 
-* inference on in-wild-dataset (for example, deepfashion):
+* inference on real images (for example, deepfashion):
     `python inference.py -c configs/test.yaml -d assets/data/deepfashion -t deepfashion -o outputs/deepfashion` 
 
 2. Simulate the predicted results (Windows):
