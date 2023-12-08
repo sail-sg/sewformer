@@ -19,7 +19,7 @@ ACM Transactions on Graphics (SIGGRAPH Asia 2023)
 * The environment can be initialized with `conda env create -f environment.yaml`. Then you can activate the environment `conda activate garment`. 
 
 ### Training
-* Download our provided [dataset]() and put it into `path_to_sewfactory`, update the local paths in `system.json` to make sure the dataset setup correctly. 
+* Download our provided [dataset](https://huggingface.co/datasets/liulj/garment) and put it into `path_to_sewfactory`, update the local paths in `system.json` to make sure the dataset setup correctly. 
 * Train the model with
 `torchrun --standalone --nnodes=1 --nproc_per_node=1 train.py -c configs/train.yaml`
 
