@@ -1,0 +1,154 @@
+{
+    "one_pieces": {
+        "dress_sleeveless": [
+            [
+                "top_back",
+                4
+            ],
+            [
+                "top_front",
+                4
+            ],
+            [
+                "top_front",
+                5
+            ]
+        ],
+        "jumpsuit_sleeveles": [
+            [
+                "up_back",
+                5
+            ],
+            [
+                "up_front",
+                5
+            ],
+            [
+                "up_front",
+                6
+            ]
+        ],
+        "wb_dress_sleeveless": [
+            [
+                "top_back",
+                4
+            ],
+            [
+                "top_front",
+                4
+            ],
+            [
+                "top_front",
+                5
+            ]
+        ]
+    },
+    "tops": {
+        "tee": [
+            [
+                "back",
+                4
+            ],
+            [
+                "front",
+                5
+            ],
+            [
+                "front",
+                4
+            ]
+        ]
+    },
+    "bottoms": {
+        "skirt_2_panels": [
+            [
+                "front",
+                3
+            ],
+            [
+                "back",
+                3
+            ]
+        ],
+        "skirt_4_panels": [
+            [
+                "front",
+                3
+            ],
+            [
+                "back",
+                3
+            ],
+            [
+                "right",
+                3
+            ],
+            [
+                "left",
+                3
+            ]
+        ],
+        "skirt_8_panels": [
+            [
+                "front",
+                3
+            ],
+            [
+                "back",
+                3
+            ],
+            [
+                "right_0",
+                3
+            ],
+            [
+                "right_1",
+                3
+            ],
+            [
+                "right_2",
+                3
+            ],
+            [
+                "left_0",
+                3
+            ],
+            [
+                "left_1",
+                3
+            ],
+            [
+                "left_2",
+                3
+            ]
+        ],
+        "pants_straight_sides": [
+            [
+                "Rback",
+                2
+            ],
+            [
+                "Rfront",
+                3
+            ],
+            [
+                "Lback",
+                3
+            ],
+            [
+                "Lfront",
+                2
+            ]
+        ],
+        "wb_pants_straigh": [
+            [
+                "wb_back",
+                3
+            ],
+            [
+                "wb_front",
+                3
+            ]
+        ]
+    }
+}
